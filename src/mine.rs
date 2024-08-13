@@ -36,7 +36,7 @@ impl Miner {
             println!(
                 "\n\nStake: {} ORE\n{}  Multiplier: {:12}x",
                 amount_u64_to_string(proof.balance),
-                if last_hash_at.gt(&0) {
+                if last_hash_at > 0 {
                     format!(
                         "  Change: {} ORE\n",
                         amount_u64_to_string(proof.balance.saturating_sub(last_balance))
@@ -57,7 +57,7 @@ impl Miner {
                 // Build instruction set
                 let mut ixs = vec![ore_api::instruction::auth(proof_pubkey(signer.pubkey()))];
                 let mut compute_budget = 500_000;
-                if self.should_reset(config).await && rand::thread_rng().gen_range(0..100).eq(&0) {
+                if self.should_reset(config).await && rand::thread_rng().gen_range(0..100) == 0 {
                     compute_budget += 100_000;
                     ixs.push(ore_api::instruction::reset(signer.pubkey()));
                 }
@@ -122,7 +122,7 @@ impl Miner {
                             if difficulty > *global_best {
                                 *global_best = difficulty;
                                 let mut best_result_lock = best_result.write().unwrap();
-                                // Instead of cloning, we store the reference of hx in best_result_lock
+                                // Store the best result found
                                 *best_result_lock = (nonce, difficulty, hx);
                             }
                         }
